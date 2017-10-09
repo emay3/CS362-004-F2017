@@ -1,2 +1,2 @@
-My name is Elizabeth May (mayel)
+this is assignment #2 
 
