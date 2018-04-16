@@ -5,6 +5,10 @@
 #include <math.h>
 #include <stdlib.h>
 
+int adventurer_effect(int *drawntreasure, struct gameState *state, int *cardDrawn, int currentPlayer, int *temphand, int z);
+
+
+
 int compare(const void* a, const void* b) {
   if (*(int*)a > *(int*)b)
     return 1;
@@ -668,9 +672,9 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
     {
 	//refactored adventurer
     case adventurer:
-	int adventure;
-		adventure = adventurer_effect( &drawntreasure, state, &cardDrawn, currentPlayer, &temphand,  &z);
-      return adventure;
+	;
+	int advntr = adventurer_effect( &drawntreasure, state, &cardDrawn, currentPlayer, temphand,  z);
+      	return advntr;
 			
     case council_room:
       //+4 Cards
@@ -1154,8 +1158,8 @@ int cardEffect(int card, int choice1, int choice2, int choice3, struct gameState
 /*************************************************************************/
 /* REFACTORED CARD EFFECT FUNCTIONS */
 
-int adventurer_effect(int *drawntreasure, struct gameState *state, int *cardDrawn, int currentPlayer, int *temphand, int *z){
-	
+int adventurer_effect(int *drawntreasure, struct gameState *state, int *cardDrawn, int currentPlayer, int *temphand, int z){
+	int i;
 	while(drawntreasure<2){
 		if (state->deckCount[currentPlayer] <1){//if the deck is empty we need to shuffle discard and add to deck
 			shuffle(currentPlayer, state);
@@ -1174,7 +1178,7 @@ int adventurer_effect(int *drawntreasure, struct gameState *state, int *cardDraw
     }
   
 	while(z-1>=0){
-		state->discard[currentPlayer][state->discardCount[currentPlayer]++]=temphand[z]; // discard all cards in play that have been drawn
+		state->discard[currentPlayer][state->discardCount[currentPlayer]++]=temphand[z+1]; // discard all cards in play that have been drawn
 		z=z-1;
     }
     return 0;
@@ -1182,8 +1186,9 @@ int adventurer_effect(int *drawntreasure, struct gameState *state, int *cardDraw
 }
 
 int smithy_effect(int handPos, struct gameState *state, int currentPlayer) {
+	int i;
 	//+3 Cards
-    for (i = 0; i =< 3; i++){
+    for (i = 0; i <= 3; i++){
 	  drawCard(currentPlayer, state);
 	}
 			
@@ -1217,11 +1222,11 @@ int embargo_effect(int handPos, int choice1, struct gameState *state, int curren
 }
 
 int cutpurse_effect(int handPos, struct gameState *state,   int currentPlayer ){
-
+	int i, j, k;
     updateCoins(currentPlayer, state, 2);
     
 	//for (i = 0; i < state->numPlayers; i++)
-	for (i = 0; i =< state->numPlayers; i++)
+	for (i = 0; i <= state->numPlayers; i++)
 	{
 	  if (i != currentPlayer)
 	    {
@@ -1254,7 +1259,7 @@ int cutpurse_effect(int handPos, struct gameState *state,   int currentPlayer ){
 }
 
 int seahag_effect(struct gameState *state, int currentPlayer){
-	
+	int i;	
 	for (i = 0; i < state->numPlayers; i++){
 		if (i != currentPlayer){
 			state->discard[i][state->discardCount[i]] = state->deck[i][state->deckCount[i]--];			    
